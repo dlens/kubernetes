@@ -1,0 +1,152 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: portfolio-deployment
+  labels:
+    app: portfolio
+spec:
+  replicas: {{ .Values.service.portfolio.replicas }}
+  selector:
+    matchLabels:
+      app: portfolio
+  template:
+    metadata:
+      labels:
+        app: portfolio
+    spec:
+      {{ if .Values.jwt.publicKey }}
+      volumes:
+      - name: jwt-keys-volume
+        secret:
+          secretName: jwt-keys-secret
+      {{ end }}
+      containers:
+      - name: portfolio
+        image: {{ .Values.service.image.url }}/{{ .Values.service.portfolio.tag }}
+        ports:
+        - containerPort: {{ .Values.service.portfolio.port }}    
+        imagePullPolicy: Always
+        {{ if .Values.jwt.publicKey }}
+        volumeMounts:
+        - name: jwt-keys-volume
+          readOnly: true
+          mountPath: /jwt-keys
+        {{ end }}
+        env:        
+        - name: service.url.apigateway
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: apigateway-service-url
+        - name: database.jdbcUrl
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/portfolio?useSSL=false&rewriteBatchedStatements=true           
+        - name: database.username
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-username
+        - name: database.password
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-password
+        - name: database.dlconf.jdbcUrl
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/dlconf?useSSL=false&rewriteBatchedStatements=true
+        - name: database.dlconf.username
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-username
+        - name: database.dlconf.password
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-password
+        - name: cacheServers
+          valueFrom:
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: memcached-service-url
+        - name: elastic.server
+          valueFrom:
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: elastic-service-url
+        - name: jwt.secret
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: jwt-secret
+        - name: spring.rabbitmq.host
+          valueFrom: 
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: rabbitmq-host
+        - name: spring.rabbitmq.port
+          valueFrom: 
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: rabbitmq-port
+        - name: spring.rabbitmq.username
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: rabbitmq-username
+        - name: spring.rabbitmq.password
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: rabbitmq-password
+        - name: DL_LICENSE_KEY
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: dl-license-key
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-password
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: database-host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: database-port
+        - name: access.token.header
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: access-token-header
+        {{ if .Values.jwt.publicKey }}
+        - name: jwt.privateKey
+          value: /jwt-keys/private_key.pk8
+        - name: jwt.publicKey
+          value: /jwt-keys/public_key.pub
+        {{ end }}
+      imagePullSecrets:
+      - name: regcred    
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: portfolio-service
+spec:
+  selector:
+    app: portfolio
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.portfolio.port }} 
+    targetPort: {{ .Values.service.portfolio.port }}
+

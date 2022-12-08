@@ -1,0 +1,54 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: dlxui-deployment
+  labels:
+    app: dlxui
+spec:
+  replicas: {{ .Values.service.dlxui.replicas }}
+  selector:
+    matchLabels:
+      app: dlxui
+  template:
+    metadata:
+      labels:
+        app: dlxui
+    spec:
+      containers:
+      - name: dlxui
+        image: {{ .Values.service.image.url }}/{{ .Values.service.dlxui.tag }}
+        ports:
+        - containerPort: {{ .Values.service.dlxui.port }}
+        env:
+        - name: SERVICE_URL_APIGATEWAY
+          valueFrom:
+            configMapKeyRef:
+               name: {{ .Release.Name }}-configmap
+               key: apigateway-service-url
+        volumeMounts:
+        - name: dlxui-config-volume
+          mountPath: /wfConfig 
+      volumes:
+      - name: dlxui-config-volume
+        configMap: 
+          name: {{ .Release.Name }}-configmap
+          items: 
+          - key: config.json
+            path: config.json
+
+      imagePullSecrets:
+      - name: regcred          
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dlxui-service
+spec:
+  selector:
+    app: dlxui
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.dlxui.port }}
+    targetPort: {{ .Values.service.dlxui.port }}
+

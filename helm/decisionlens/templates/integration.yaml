@@ -1,0 +1,140 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: integration-deployment
+  labels:
+    app: integration
+spec:
+  replicas: {{ .Values.service.integration.replicas }}
+  selector:
+    matchLabels:
+      app: integration
+  template:
+    metadata:
+      labels:
+        app: integration
+    spec:
+      {{ if .Values.jwt.publicKey }}
+      volumes:
+      - name: jwt-keys-volume
+        secret:
+          secretName: jwt-keys-secret
+      {{ end }}
+      containers:
+      - name: integration
+        image: {{ .Values.service.image.url }}/{{ .Values.service.integration.tag }}
+        ports:
+        - containerPort: {{ .Values.service.integration.port }}    
+        imagePullPolicy: Always
+        {{ if .Values.jwt.publicKey }}
+        volumeMounts:
+        - name: jwt-keys-volume
+          readOnly: true
+          mountPath: /jwt-keys
+        {{ end }}
+        env:        
+        - name: service.url.apigateway
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: apigateway-service-url
+        - name: database.jdbcUrl
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/integration?useSSL=false&rewriteBatchedStatements=true           
+        - name: database.username
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-username
+        - name: database.password
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-password
+        - name: cacheServers
+          valueFrom:
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: memcached-service-url
+        - name: elastic.server
+          valueFrom:
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: elastic-service-url
+        - name: jwt.secret
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: jwt-secret
+        - name: spring.rabbitmq.host
+          valueFrom: 
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: rabbitmq-host
+        - name: spring.rabbitmq.port
+          valueFrom: 
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: rabbitmq-port
+        - name: spring.rabbitmq.username
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: rabbitmq-username
+        - name: spring.rabbitmq.password
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: rabbitmq-password
+        - name: DL_LICENSE_KEY
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: dl-license-key
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name}}-secret
+              key: database-password
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: database-host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: database-port
+        - name: access.token.header
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: access-token-header
+        {{ if .Values.jwt.publicKey }}
+        - name: jwt.privateKey
+          value: /jwt-keys/private_key.pk8
+        - name: jwt.publicKey
+          value: /jwt-keys/public_key.pub
+        {{ end }}
+      imagePullSecrets:
+      - name: regcred    
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: integration-service
+spec:
+  selector:
+    app: integration
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.integration.port }} 
+    targetPort: {{ .Values.service.integration.port }}
+

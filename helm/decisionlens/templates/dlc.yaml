@@ -1,0 +1,160 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: dlc-deployment
+  labels:
+    app: dlc
+spec:
+  replicas: {{ .Values.service.dlc.replicas }}
+  selector:
+    matchLabels:
+      app: dlc
+  template:
+    metadata:
+      labels:
+        app: dlc
+    spec:
+      {{ if .Values.jwt.publicKey }}
+      volumes:
+      - name: jwt-keys-volume
+        secret:
+          secretName: jwt-keys-secret
+      {{ end }}
+      containers:
+      - name: dlc
+        image: {{ .Values.service.image.url }}/{{ .Values.service.dlc.tag }}
+        ports:
+        - containerPort: {{ .Values.service.dlc.port }}
+        imagePullPolicy: Always
+        {{ if .Values.jwt.publicKey }}
+        volumeMounts:
+        - name: jwt-keys-volume
+          readOnly: true
+          mountPath: /jwt-keys
+        {{ end }}
+        env:
+        - name: database.jdbcUrl
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.dlc }}?useSSL=false&rewriteBatchedStatements=true&useUnicode=yes&characterEncoding=UTF-8
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: database-password
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: database-host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: database-port
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: dlc-database-name
+        - name: service.url.apigateway
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: apigateway-service-url
+        - name: cacheServers
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: memcached-service-url
+        - name: elastic.server
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: elastic-service-url
+        - name: jwt.secret
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: jwt-secret
+        - name: RABBITMQ_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: rabbitmq-host
+        - name: RABBITMQ_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: rabbitmq-port
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: rabbitmq-username
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: rabbitmq-password
+        - name: license.key
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: dl-license-key
+        - name: mail.host
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: mail-host
+        - name: mail.port
+          valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-configmap
+                key: mail-port
+        - name: mail.username
+          valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: mail-username
+        - name: mail.password
+          valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: mail-password
+        - name: mail.auth
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: mail-auth
+        - name: access.token.header
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: access-token-header
+        {{ if .Values.jwt.publicKey }}
+        - name: jwt.privateKey
+          value: /jwt-keys/private_key.pk8
+        - name: jwt.publicKey
+          value: /jwt-keys/public_key.pub
+        {{ end }}
+
+      imagePullSecrets:
+      - name: regcred
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dlc-service
+spec:
+  selector:
+    app: dlc
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.dlc.port }}
+    targetPort: {{ .Values.service.dlc.port }}
+

@@ -1,0 +1,80 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: apigateway-deployment
+  labels:
+    app: apigateway
+spec:
+  replicas: {{ .Values.service.apigateway.replicas }}
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        app: apigateway
+    spec:
+      containers:
+      - name: apigateway
+        image: {{ .Values.service.image.url }}/{{ .Values.service.apigateway.tag }}
+        ports:
+        - containerPort: {{ .Values.service.apigateway.port }}           
+        env: 
+        - name: service.url.integration
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: integration-service-url
+              
+        - name: service.url.portfolio
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: portfolio-service-url  
+
+        - name: service.url.mldata
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: mldata-service-url 
+
+        - name: service.url.plan
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: plan-service-url   
+
+        - name: service.url.messaging
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: messaging-service-url  
+
+        - name: service.url.auth
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: auth-service-url  
+
+        - name: service.url.dlc
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: dlc-service-url  
+
+      imagePullSecrets:
+      - name: regcred          
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: apigateway-service
+spec:
+  selector:
+    app: apigateway
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.apigateway.port }}
+    targetPort: {{ .Values.service.apigateway.port }}
+

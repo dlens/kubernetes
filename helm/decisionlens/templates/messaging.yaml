@@ -1,0 +1,128 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: messaging-deployment
+  labels:
+    app: messaging
+spec:
+  replicas: {{ .Values.service.messaging.replicas }}
+  selector:
+    matchLabels:
+      app: messaging
+  template:
+    metadata:
+      labels:
+        app: messaging
+    spec:
+      {{ if .Values.jwt.publicKey }}
+      volumes:
+      - name: jwt-keys-volume
+        secret:
+          secretName: jwt-keys-secret
+      {{ end }}
+      containers:
+      - name: messaging
+        image: {{ .Values.service.image.url }}/{{ .Values.service.messaging.tag }}
+        ports:
+        - containerPort: {{ .Values.service.messaging.port }}    
+        imagePullPolicy: Always
+        {{ if .Values.jwt.publicKey }}
+        volumeMounts:
+        - name: jwt-keys-volume
+          readOnly: true
+          mountPath: /jwt-keys
+        {{ end }}
+        env:        
+        - name: service.url.apigateway
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: apigateway-service-url       
+        - name: cacheServers
+          valueFrom:
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: memcached-service-url
+        - name: elastic.server
+          valueFrom:
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: elastic-service-url
+        - name: jwt.secret
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: jwt-secret
+        - name: spring.rabbitmq.host
+          valueFrom: 
+            configMapKeyRef: 
+              name: {{ .Release.Name }}-configmap
+              key: rabbitmq-host
+        - name: spring.rabbitmq.username
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: rabbitmq-username
+        - name: spring.rabbitmq.password
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: rabbitmq-password
+        - name: DL_LICENSE_KEY
+          valueFrom: 
+            secretKeyRef: 
+              name: {{ .Release.Name }}-secret
+              key: dl-license-key
+        - name: spring.mail.host
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: mail-host
+        - name: spring.mail.port
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: mail-port
+        - name: spring.mail.username
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: mail-username
+        - name: spring.mail.password
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-secret
+              key: mail-password
+        - name: spring.mail.properties.mail.smtp.auth
+          valueFrom:
+             configMapKeyRef:
+               name: {{ .Release.Name }}-configmap
+               key: mail-auth
+        - name: access.token.header
+          valueFrom:
+            configMapKeyRef:
+               name: {{ .Release.Name }}-configmap
+               key: access-token-header
+        {{ if .Values.jwt.publicKey }}
+        - name: jwt.privateKey
+          value: /jwt-keys/private_key.pk8
+        - name: jwt.publicKey
+          value: /jwt-keys/public_key.pub
+        {{ end }}
+      imagePullSecrets:
+      - name: regcred    
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: messaging-service
+spec:
+  selector:
+    app: messaging
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.messaging.port }} 
+    targetPort: {{ .Values.service.messaging.port }}
+

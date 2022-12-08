@@ -1,0 +1,55 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: dlcui-deployment
+  labels:
+    app: dlcui
+spec:
+  replicas: {{ .Values.service.dlcui.replicas }}
+  selector:
+    matchLabels:
+      app: dlcui
+  template:
+    metadata:
+      labels:
+        app: dlcui
+    spec:      
+      containers:
+      - name: dlcui
+        image: {{ .Values.service.image.url }}/{{ .Values.service.dlcui.tag }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{ .Values.service.dlcui.port }}
+        env:
+        - name: CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: client-id
+        - name: DLC_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: dlc-service-url
+        - name: AUTH_SERVICE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-configmap
+              key: dlx-api-url
+      imagePullSecrets:
+      - name: regcred
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dlcui-service
+spec:
+  selector:
+    app: dlcui
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.dlcui.port }}
+    targetPort: {{ .Values.service.dlcui.port }}
+
