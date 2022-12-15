@@ -23,6 +23,13 @@ spec:
       containers:
       - name: messaging
         image: {{ .Values.service.image.url }}/{{ .Values.service.messaging.tag }}
+        resources:
+          requests:
+            memory: "1000Mi"
+            cpu: "1000m"
+          limits:
+            memory: "4000Mi"
+            cpu: "2000m"
         ports:
         - containerPort: {{ .Values.service.messaging.port }}    
         imagePullPolicy: Always
