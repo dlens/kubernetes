@@ -3,6 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: integration-service
+  labels:
+    app: integration
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
 spec:
   selector:
     app: integration

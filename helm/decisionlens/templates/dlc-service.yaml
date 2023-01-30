@@ -3,7 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: dlc-service
-  {{- include "decisionlens.labels" . | nindent 2 }}
+  labels:
+    app: dlc
+    {{- include "decisionlens.labels" . | nindent 4 }}
 spec:
   selector:
     app: dlc

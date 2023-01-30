@@ -3,7 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: portfolio-service
-  {{- include "decisionlens.labels.standard" . | nindent 2 }}
+  labels:
+    app: portfolio
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
 spec:
   selector:
     app: portfolio

@@ -3,7 +3,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: apigateway-service
-  {{- include "decisionlens.labels" . | nindent 2 }}
+  labels:
+    {{- include "decisionlens.labels" . | nindent 4 }}
 spec:
   selector:
     app: apigateway

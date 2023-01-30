@@ -1,0 +1,17 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: auth-service
+  labels: 
+    app: auth
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+spec:
+  selector:
+    app: auth
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.auth.port }} 
+    targetPort: {{ .Values.service.auth.port }}
+

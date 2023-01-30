@@ -3,7 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: dlxui-service
-  {{- include "decisionlens.labels.standard" . | nindent 2 }}
+  labels:
+    app: dlxui
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
 spec:
   selector:
     app: dlxui

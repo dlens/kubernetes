@@ -3,7 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: plan-service
-  {{- include "decisionlens.labels.standard" . | nindent 2 }}
+  labels:
+    app: plan
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
 spec:
   selector:
     app: plan
