@@ -22,7 +22,7 @@ spec:
         {{- include "decisionlens.selectorLabels" . | nindent 8 }}
       annotations:
       {{- with .Values.global.podAnnotations }}
-        {{- toYaml . | nindent 6 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
       containers:
