@@ -1,3 +1,9 @@
+ingress:
+  dlx:
+    annotations: {}
+  dlc:
+    annotations: {}
+
 service:
   image:
     url: 723504183657.dkr.ecr.us-east-1.amazonaws.com
@@ -70,8 +76,8 @@ mail:
   auth: true
   host: smtp.gmail.com
   port: 587
-  username:
-  password:
+  username: "changeme"
+  password: "changeme"
 
 memcached:
   servers: 10.0.0.17:11211
@@ -81,7 +87,7 @@ elastic:
     url: http://10.0.0.17:9200
 
 license:
-  key:
+  key: "changeme"
 
 jwt:
   secret: 6rILDDQjA-0yqrfH_9t2Cz8AJ2xH_Zs9l8v5k8RyQaI
@@ -99,4 +105,11 @@ access:
   token:
     header: Authorization
 
+serviceAccount:
+  create: false
 
+global:
+  imagePullSecrets:
+  - name: regcred
+  annotations: {}
+  podAnnotations: {} 

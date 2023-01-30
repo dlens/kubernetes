@@ -1,0 +1,14 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: integration-service
+spec:
+  selector:
+    app: integration
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.integration.port }} 
+    targetPort: {{ .Values.service.integration.port }}
+

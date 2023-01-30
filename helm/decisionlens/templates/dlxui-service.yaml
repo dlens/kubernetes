@@ -1,0 +1,15 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dlxui-service
+  {{- include "decisionlens.labels.standard" . | nindent 2 }}
+spec:
+  selector:
+    app: dlxui
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.dlxui.port }}
+    targetPort: {{ .Values.service.dlxui.port }}
+

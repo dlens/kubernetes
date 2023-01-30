@@ -1,0 +1,15 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: portfolio-service
+  {{- include "decisionlens.labels.standard" . | nindent 2 }}
+spec:
+  selector:
+    app: portfolio
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.portfolio.port }} 
+    targetPort: {{ .Values.service.portfolio.port }}
+

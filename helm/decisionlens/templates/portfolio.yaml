@@ -4,15 +4,26 @@ metadata:
   name: portfolio-deployment
   labels:
     app: portfolio
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  annotations:
+  {{- with .Values.global.annotations }}
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.service.portfolio.replicas }}
   selector:
     matchLabels:
       app: portfolio
+      {{- include "decisionlens.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         app: portfolio
+        {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{ if .Values.jwt.publicKey }}
       volumes:
@@ -140,20 +151,12 @@ spec:
         - name: jwt.publicKey
           value: /jwt-keys/public_key.pub
         {{ end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: portfolio-service
+      {{- end }}
       imagePullSecrets:
-      - name: regcred    
+      {{- with .Values.global.imagePullSecrets }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: portfolio-service
-spec:
-  selector:
-    app: portfolio
-  ports:
-  - protocol: TCP
-    port: {{ .Values.service.portfolio.port }} 
-    targetPort: {{ .Values.service.portfolio.port }}
 

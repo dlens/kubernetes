@@ -1,0 +1,43 @@
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: dlc-ingress
+  labels:
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    {{- with .Values.ingress.dlc.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: dlc
+      http:
+        paths:
+        - path: "/dl3-service-.*"
+          pathType: Prefix
+          backend:
+            service:
+              name: dlc-service
+              port:
+                number: {{ .Values.service.dlc.port }}
+
+        - path: "/dlm-service"
+          pathType: Prefix
+          backend:
+            service:
+              name: dlc-service
+              port:
+                number: {{ .Values.service.dlc.port }}
+
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: dlcui-service
+              port:
+                number: {{ .Values.service.dlcui.port }}
+
+

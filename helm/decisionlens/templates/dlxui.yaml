@@ -4,15 +4,26 @@ metadata:
   name: dlxui-deployment
   labels:
     app: dlxui
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  annotations:
+  {{- with .Values.global.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.service.dlxui.replicas }}
   selector:
     matchLabels:
       app: dlxui
+      {{- include "decisionlens.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         app: dlxui
+        {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      annotations:
+      {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       containers:
       - name: dlxui
@@ -42,20 +53,11 @@ spec:
           items: 
           - key: config.json
             path: config.json
-
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: dlxui-service
+      {{- end }}
       imagePullSecrets:
-      - name: regcred          
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: dlxui-service
-spec:
-  selector:
-    app: dlxui
-  ports:
-  - protocol: TCP
-    port: {{ .Values.service.dlxui.port }}
-    targetPort: {{ .Values.service.dlxui.port }}
+      {{- with .Values.global.imagePullSecrets }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 

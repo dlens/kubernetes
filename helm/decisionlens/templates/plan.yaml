@@ -4,15 +4,27 @@ metadata:
   name: plan-deployment
   labels:
     app: plan
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  annotations:
+  {{- with .Values.global.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.service.plan.replicas }}
   selector:
     matchLabels:
       app: plan
+      {{- include "decisionlens.selectorLabels" . | nindent 6 }}
+spec:
   template:
     metadata:
       labels:
         app: plan
+        {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      {{- with .Values.global.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{ if .Values.jwt.publicKey }}
       volumes:
@@ -140,20 +152,11 @@ spec:
         - name: jwt.publicKey
           value: /jwt-keys/public_key.pub
         {{ end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: plan-service
+      {{- end }}
       imagePullSecrets:
-      - name: regcred    
-
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: plan-service
-spec:
-  selector:
-    app: plan
-  ports:
-  - protocol: TCP
-    port: {{ .Values.service.plan.port }} 
-    targetPort: {{ .Values.service.plan.port }}
+      {{- with .Values.global.imagePullSecrets }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 

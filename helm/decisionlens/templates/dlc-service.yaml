@@ -1,0 +1,14 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dlc-service
+  {{- include "decisionlens.labels" . | nindent 2 }}
+spec:
+  selector:
+    app: dlc
+    {{- include "decisionlens.labels" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.dlc.port }}
+    targetPort: {{ .Values.service.dlc.port }}

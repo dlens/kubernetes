@@ -1,0 +1,16 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mldata-service
+  labels:
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+spec:
+  selector:
+    app: mldata
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.mldata.port }} 
+    targetPort: {{ .Values.service.mldata.port }}
+

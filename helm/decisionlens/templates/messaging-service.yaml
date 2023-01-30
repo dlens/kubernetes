@@ -1,0 +1,15 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: messaging-service
+  {{- include "decisionlens.labels.standard" . | nindent 2 }}
+spec:
+  selector:
+    app: messaging
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.messaging.port }} 
+    targetPort: {{ .Values.service.messaging.port }}
+

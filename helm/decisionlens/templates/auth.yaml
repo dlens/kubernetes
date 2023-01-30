@@ -2,24 +2,35 @@ kind: Deployment
 apiVersion: apps/v1
 metadata: 
   name: auth-deployment
-  labels:
+  labels: 
     app: auth
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  {{- with .Values.global.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.service.auth.replicas }}
   selector:
     matchLabels:
       app: auth
+      {{- include "decisionlens.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         app: auth
+        {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      {{- with .Values.global.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
-      {{ if .Values.jwt.publicKey }}
+      {{- if .Values.jwt.publicKey }}
       volumes:
       - name: jwt-keys-volume
         secret:
           secretName: jwt-keys-secret
-      {{ end }}
+      {{- end }}
       containers:
       - name: auth
         image: {{ .Values.service.image.url }}/{{ .Values.service.auth.tag }}
@@ -33,12 +44,12 @@ spec:
         ports:
         - containerPort: {{ .Values.service.auth.port }}    
         imagePullPolicy: Always
-        {{ if .Values.jwt.publicKey }}
+        {{- if .Values.jwt.publicKey }}
         volumeMounts:
         - name: jwt-keys-volume
           readOnly: true
           mountPath: /jwt-keys
-        {{ end }}
+        {{- end }}
         env:        
         - name: service.url.apigateway
           valueFrom:
@@ -152,21 +163,12 @@ spec:
         - name: jwt.publicKey
           value: /jwt-keys/public_key.pub
         {{ end }}
-
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: auth-service
+      {{- end }}
       imagePullSecrets:
-      - name: regcred    
+      {{- with .Values.global.imagePullSecrets }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: auth-service
-spec:
-  selector:
-    app: auth
-  ports:
-  - protocol: TCP
-    port: {{ .Values.service.auth.port }} 
-    targetPort: {{ .Values.service.auth.port }}
 

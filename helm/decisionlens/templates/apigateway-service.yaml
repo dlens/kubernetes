@@ -1,0 +1,15 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: apigateway-service
+  {{- include "decisionlens.labels" . | nindent 2 }}
+spec:
+  selector:
+    app: apigateway
+    {{- include "decisionlens.labels" . | nindent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.apigateway.port }}
+    targetPort: {{ .Values.service.apigateway.port }}
+
