@@ -15,14 +15,13 @@ spec:
     matchLabels:
       app: plan
       {{- include "decisionlens.selectorLabels" . | nindent 6 }}
-spec:
   template:
     metadata:
       labels:
         app: plan
         {{- include "decisionlens.selectorLabels" . | nindent 8 }}
-      {{- with .Values.global.podAnnotations }}
       annotations:
+      {{- with .Values.global.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
