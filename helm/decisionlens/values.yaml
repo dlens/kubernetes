@@ -22,7 +22,7 @@ service:
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
   portfolio:
     tag: decisionlens_downloads:portfolio-service_5.8.0
     port: 9001
@@ -30,7 +30,7 @@ service:
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
   mldata:
     tag: decisionlens_downloads:mldata-service_3.1.1
     port: 9002
@@ -38,7 +38,7 @@ service:
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
   plan:
     tag: decisionlens_downloads:plan-service_4.2.5
     port: 9003
@@ -46,7 +46,7 @@ service:
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
   messaging:
     tag: decisionlens_downloads:messaging-service_3.7.2
     port: 9004
@@ -54,7 +54,7 @@ service:
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
   apigateway:
     tag: decisionlens_downloads:apigateway-service_4.7.2
     version: master
@@ -63,7 +63,7 @@ service:
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
   auth:
     tag: decisionlens_downloads:auth-service_4.2.0
     port: 9006
@@ -71,14 +71,14 @@ service:
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
   dlxui:
     tag: decisionlens_downloads:dlx-ui_5.8.2
     port: 8089
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
   dlc:
     tag: decisionlens_downloads:dlc-service_1.21.49
     port: 8080
@@ -93,7 +93,7 @@ service:
     replicas: 1
     labels: {}
     selectorLabels: {}
-    annotations: {}
+    podAnnotations: {}
 
 rabbitmq:
   image: 723504183657.dkr.ecr.us-east-1.amazonaws.com/decisionlens_downloads:rabbitmq_3.11.0
