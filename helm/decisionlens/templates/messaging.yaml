@@ -5,8 +5,8 @@ metadata:
   labels:
     app: messaging
     {{- include "decisionlens.labels.standard" . | nindent 4 }}
-  {{- with .Values.global.annotations }}
   annotations:
+  {{- with .Values.global.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -14,14 +14,14 @@ spec:
   selector:
     matchLabels:
       app: messaging
-      {{- include "decisionlens.labels.standard" . | nindent 6 }}
+      {{- include "decisionlens.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         app: messaging
-        {{- include "decisionlens.labels.standard" . | nindent 8 }}
-      {{- with .Values.global.podAnnotations }}
+        {{- include "decisionlens.selectorLabels" . | nindent 8 }}
       annotations:
+      {{- with .Values.global.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -127,7 +127,7 @@ spec:
         - name: jwt.publicKey
           value: /jwt-keys/public_key.pub
         {{ end }}
-      {{- if .Values.serviceAccount.create }}
+      {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: messaging-service
       {{- end }}
       imagePullSecrets:

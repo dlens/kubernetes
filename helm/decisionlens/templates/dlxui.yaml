@@ -53,7 +53,7 @@ spec:
           items: 
           - key: config.json
             path: config.json
-      {{- if .Values.serviceAccount.create }}
+      {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: dlxui-service
       {{- end }}
       imagePullSecrets:

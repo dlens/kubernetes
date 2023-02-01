@@ -79,7 +79,7 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: dlc-service-url  
-      {{- if .Values.serviceAccount.create }}
+      {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: apigateway-service
       {{- end }}
       imagePullSecrets:

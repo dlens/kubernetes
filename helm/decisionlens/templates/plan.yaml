@@ -151,7 +151,7 @@ spec:
         - name: jwt.publicKey
           value: /jwt-keys/public_key.pub
         {{ end }}
-      {{- if .Values.serviceAccount.create }}
+      {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: plan-service
       {{- end }}
       imagePullSecrets:

@@ -54,7 +54,7 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: dlx-api-url
-      {{- if .Values.serviceAccount.create }}
+      {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: dlcui-service
       {{- end }}
       imagePullSecrets:
