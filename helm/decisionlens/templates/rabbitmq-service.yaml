@@ -1,0 +1,21 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: rabbitmq-service
+  labels:
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+spec:
+  selector:
+    app: rabbitmq
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  type: {{ .Values.rabbitmq.service.type | default "LoadBalancer" }}
+  ports: 
+  - name: port-5672
+    protocol: TCP
+    port: {{ .Values.rabbitmq.port }}
+    targetPort: {{ .Values.rabbitmq.port }}
+  - name: port-61613
+    protocol: TCP
+    port: {{ .Values.rabbitmq.stompPort }}
+    targetPort: {{ .Values.rabbitmq.stompPort }}

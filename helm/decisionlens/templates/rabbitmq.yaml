@@ -1,0 +1,54 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata: 
+  name: rabbitmq-deployment
+  labels:
+    app: rabbitmq
+    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+  {{- with .Values.rabbitmq.labels }}
+    {{- toYaml . | nindent 4  }}
+  {{- end }}
+  annotations:
+  {{- with .Values.global.annotations }}
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+      {{- include "decisionlens.selectorLabels" . | nindent 6 }}
+    {{- with .Values.rabbitmq.selectorLabels }}
+      {{- toYaml . | nindent 6  }}
+    {{- end }}
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+        {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      {{- with .Values.rabbitmq.selectorLabels }}
+        {{- toYaml . | nindent 8  }}
+      {{- end }}
+      annotations:
+      {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.rabbitmq.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      containers:
+      - name: rabbitmq
+        image: {{ .Values.rabbitmq.image }}
+        ports:       
+        - containerPort: {{ .Values.rabbitmq.port }}
+        - containerPort: {{ .Values.rabbitmq.stompPort }}
+      {{- if .Values.global.serviceAccount.create }}
+      serviceAccountName: rabbitmq-service
+      {{- end }}
+      imagePullSecrets:
+      {{- with .Values.global.imagePullSecrets }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+
+  
