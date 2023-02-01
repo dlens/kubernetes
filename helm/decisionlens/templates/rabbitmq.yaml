@@ -4,7 +4,7 @@ metadata:
   name: rabbitmq-deployment
   labels:
     app: rabbitmq
-    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+    {{- include "decisionlens.labels" . | nindent 4 }}
   {{- with .Values.rabbitmq.labels }}
     {{- toYaml . | nindent 4  }}
   {{- end }}

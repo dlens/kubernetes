@@ -4,9 +4,15 @@ metadata:
   name: messaging-deployment
   labels:
     app: messaging
-    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+    {{- include "decisionlens.labels" . | nindent 4 }}
+  {{- with .Values.service.messaging.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   annotations:
   {{- with .Values.global.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.service.messaging.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -15,13 +21,22 @@ spec:
     matchLabels:
       app: messaging
       {{- include "decisionlens.selectorLabels" . | nindent 6 }}
+    {{- with .Values.service.messaging.selectorLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   template:
     metadata:
       labels:
         app: messaging
         {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      {{- with .Values.service.messaging.selectorLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       annotations:
       {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.service.messaging.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:

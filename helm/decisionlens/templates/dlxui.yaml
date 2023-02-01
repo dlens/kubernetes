@@ -4,9 +4,15 @@ metadata:
   name: dlxui-deployment
   labels:
     app: dlxui
-    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+    {{- include "decisionlens.labels" . | nindent 4 }}
+  {{- with .Values.service.dlxui.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   annotations:
   {{- with .Values.global.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.service.dlxui.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -15,13 +21,22 @@ spec:
     matchLabels:
       app: dlxui
       {{- include "decisionlens.selectorLabels" . | nindent 6 }}
+    {{- with .Values.service.dlxui.selectorLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   template:
     metadata:
       labels:
         app: dlxui
         {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      {{- with .Values.service.dlxui.selectorLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       annotations:
       {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.service.dlxui.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:

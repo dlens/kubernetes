@@ -4,7 +4,7 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: dlc-ingress
   labels:
-    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+    {{- include "decisionlens.labels" . | nindent 4 }}
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
     {{- with .Values.ingress.dlc.annotations }}

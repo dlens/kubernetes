@@ -4,11 +4,17 @@ apiVersion: v1
 metadata:
   name: mldata-service
   labels:
-    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+    {{- include "decisionlens.labels" . | nindent 4 }}
+  {{- with .Values.service.mldata.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   selector:
     app: mldata
-    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+    {{- include "decisionlens.selectorLabels" . | nindent 4 }}
+  {{- with .Values.service.mldata.selectorLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   ports:
   - protocol: TCP
     port: {{ .Values.service.mldata.port }} 

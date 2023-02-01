@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: {{ .Release.Name }}-configmap
   labels:
-    {{- include "decisionlens.labels.standard" . | nindent 4 }}
+    {{- include "decisionlens.labels" . | nindent 4 }}
 data: 
   database-host: {{ .Values.database.host | quote }}
   database-port: {{ .Values.database.port | quote }}
