@@ -27,3 +27,17 @@ Decision Lens Selector labels
 {{ toYaml . }}
 {{- end }}
 {{- end }}
+
+{{/*
+Convert JDBC options from list to `&` seperated string
+*/}}
+{{- define "decisionlens.jdbc.options" -}}
+{{- join "&" .Values.database.jdbc.options }}
+{{- end -}}
+
+{{- define "decisionlens.dlc.jdbc.options" -}}
+{{- $dlcOptions := list "useUnicode=yes" "characterEncoding=UTF-8" -}}
+{{- $combined :=  concat .Values.database.jdbc.options $dlcOptions | uniq -}}
+{{- join "&" $combined }}
+{{- end -}}
+

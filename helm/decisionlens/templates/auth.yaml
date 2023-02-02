@@ -72,7 +72,7 @@ spec:
               name: {{ .Release.Name }}-configmap
               key: apigateway-service-url
         - name: database.jdbcUrl
-          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/auth?useSSL=false&rewriteBatchedStatements=true           
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/auth?{{ include "decisionlens.jdbc.options" . }}
         - name: database.username
           valueFrom:
             secretKeyRef:
@@ -84,7 +84,7 @@ spec:
               name: {{ .Release.Name }}-secret
               key: database-password
         - name: database.dlconf.jdbcUrl
-          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/dlconf?useSSL=false&rewriteBatchedStatements=true
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/dlconf?{{ include "decisionlens.jdbc.options" . }}
         - name: database.dlconf.username
           valueFrom:
             secretKeyRef:

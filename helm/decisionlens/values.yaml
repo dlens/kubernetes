@@ -114,6 +114,10 @@ database:
   username: root
   password: dl
   dlc: dl3
+  jdbc:
+    options:
+      - useSSL=false
+      - rewriteBatchedStatements=true
 
 mail:
   auth: true

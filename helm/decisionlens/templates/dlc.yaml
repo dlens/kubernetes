@@ -67,7 +67,7 @@ spec:
         {{ end }}
         env:
         - name: database.jdbcUrl
-          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.dlc }}?useSSL=false&rewriteBatchedStatements=true&useUnicode=yes&characterEncoding=UTF-8
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.dlc }}?{{ include "decisionlens.dlc.jdbc.options" . }}
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
