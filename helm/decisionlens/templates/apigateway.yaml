@@ -65,12 +65,6 @@ spec:
               name: {{ .Release.Name }}-configmap
               key: portfolio-service-url  
 
-        - name: service.url.mldata
-          valueFrom:
-            configMapKeyRef:
-              name: {{ .Release.Name }}-configmap
-              key: mldata-service-url 
-
         - name: service.url.plan
           valueFrom:
             configMapKeyRef:

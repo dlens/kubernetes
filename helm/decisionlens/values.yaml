@@ -31,14 +31,6 @@ service:
     labels: {}
     selectorLabels: {}
     podAnnotations: {}
-  mldata:
-    tag: decisionlens_downloads:mldata-service_3.1.1
-    port: 9002
-    url: http://mldata-service:9002
-    replicas: 1
-    labels: {}
-    selectorLabels: {}
-    podAnnotations: {}
   plan:
     tag: decisionlens_downloads:plan-service_4.2.5
     port: 9003
