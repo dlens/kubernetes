@@ -4,15 +4,41 @@ metadata:
   name: mldata-deployment
   labels:
     app: mldata
+    {{- include "decisionlens.labels" . | nindent 4 }}
+  {{- with .Values.service.mldata.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  annotations:
+  {{- with .Values.global.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.service.mldata.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.service.mldata.replicas }}
   selector:
     matchLabels:
       app: mldata
+      {{- include "decisionlens.selectorLabels" . | nindent 6 }}
+    {{- with .Values.service.mldata.selectorLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   template:
     metadata:
       labels:
         app: mldata
+        {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      {{- with .Values.service.mldata.selectorLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      annotations:
+      {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.service.mldata.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{ if .Values.jwt.publicKey }}
       volumes:
@@ -46,7 +72,7 @@ spec:
               name: {{ .Release.Name }}-configmap
               key: apigateway-service-url
         - name: database.jdbcUrl
-          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/mldata?useSSL=false&rewriteBatchedStatements=true           
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/mldata?{{ include "decisionlens.jdbc.options" . }}
         - name: database.username
           valueFrom:
             secretKeyRef:
@@ -128,20 +154,12 @@ spec:
         - name: jwt.publicKey
           value: /jwt-keys/public_key.pub
         {{ end }}
+      {{- if .Values.global.serviceAccount.create }}
+      serviceAccountName: mldata-service
+      {{- end }}
       imagePullSecrets:
-      - name: regcred    
+      {{- with .Values.global.imagePullSecrets }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: mldata-service
-spec:
-  selector:
-    app: mldata
-  ports:
-  - protocol: TCP
-    port: {{ .Values.service.mldata.port }} 
-    targetPort: {{ .Values.service.mldata.port }}
 

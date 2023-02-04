@@ -4,15 +4,41 @@ metadata:
   name: apigateway-deployment
   labels:
     app: apigateway
+    {{- include "decisionlens.labels" . | nindent 4 }}
+  {{- with .Values.service.apigateway.labels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  annotations:
+  {{- with .Values.global.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.service.apigateway.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   replicas: {{ .Values.service.apigateway.replicas }}
   selector:
     matchLabels:
       app: apigateway
+      {{- include "decisionlens.selectorLabels" . | nindent 6 }}
+    {{- with .Values.service.apigateway.selectorLabels }}
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
   template:
     metadata:
       labels:
         app: apigateway
+        {{- include "decisionlens.selectorLabels" . | nindent 8 }}
+      {{- with .Values.service.apigateway.selectorLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      annotations:
+      {{- with .Values.global.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.service.apigateway.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       containers:
       - name: apigateway
@@ -68,20 +94,11 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: dlc-service-url  
-
+      {{- if .Values.global.serviceAccount.create }}
+      serviceAccountName: apigateway-service
+      {{- end }}
       imagePullSecrets:
-      - name: regcred          
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: apigateway-service
-spec:
-  selector:
-    app: apigateway
-  ports:
-  - protocol: TCP
-    port: {{ .Values.service.apigateway.port }}
-    targetPort: {{ .Values.service.apigateway.port }}
+      {{- with .Values.global.imagePullSecrets }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
 
