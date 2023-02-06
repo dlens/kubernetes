@@ -11,33 +11,10 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-    - host: dlc
-      http:
-        paths:
-        - path: "/dl3-service-.*"
-          pathType: Prefix
-          backend:
-            service:
-              name: dlc-service
-              port:
-                number: {{ .Values.service.dlc.port }}
-
-        - path: "/dlm-service"
-          pathType: Prefix
-          backend:
-            service:
-              name: dlc-service
-              port:
-                number: {{ .Values.service.dlc.port }}
-
-        - path: "/"
-          pathType: Prefix
-          backend:
-            service:
-              name: dlcui-service
-              port:
-                number: {{ .Values.service.dlcui.port }}
-
+  - host: {{ .Values.ingress.dlc.host }}
+    http:
+      paths:
+      {{- .Values.ingress.dlc.paths | toYaml | nindent 6 }}
 

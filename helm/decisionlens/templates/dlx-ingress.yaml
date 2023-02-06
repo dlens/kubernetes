@@ -10,48 +10,10 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  ingressClassName: nginx
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-  - host: dlx
+  - host: {{ .Values.ingress.dlx.host }}
     http:
       paths:
-      - path: "/v1"
-        pathType: Prefix
-        backend:
-          service:
-            name: apigateway-service
-            port:
-              number: {{ .Values.service.apigateway.port }}
-
-      - path: "/oauth/callback"
-        pathType: Prefix
-        backend:
-          service:
-            name: dlxui-service
-            port:
-              number: {{ .Values.service.dlxui.port }}
-
-      - path: "/oauth"
-        pathType: Prefix
-        backend:
-          service:
-            name: apigateway-service
-            port:
-              number: {{ .Values.service.apigateway.port }}
-
-      - path: "/.*-service"
-        pathType: Prefix
-        backend:
-          service:
-            name: apigateway-service
-            port:
-              number: {{ .Values.service.apigateway.port }}
-
-      - path: "/"
-        pathType: Prefix
-        backend:
-         service:
-            name: dlxui-service
-            port:
-              number: {{ .Values.service.dlxui.port }}
+      {{- .Values.ingress.dlx.paths | toYaml | nindent 6 }}
 
