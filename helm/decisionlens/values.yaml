@@ -10,69 +10,46 @@ ingress:
   ingressClassName: nginx
   dlx:
     annotations: {}
-    host: dlx
-    paths:
-    - path: "/v1"
-      pathType: Prefix
-      backend:
-        service:
-          name: apigateway-service
-          port:
-            number: 9005
-    - path: "/oauth/callback"
-      pathType: Prefix
-      backend:
-        service:
-          name: dlxui-service
-          port:
-            number: 8089
-    - path: "/oauth"
-      pathType: Prefix
-      backend:
-        service:
-          name: apigateway-service
-          port:
-            number: 9005
-    - path: "/.*-service"
-      pathType: Prefix
-      backend:
-        service:
-          name: apigateway-service
-          port:
-            number: 9005
-    - path: "/"
-      pathType: Prefix
-      backend:
-       service:
-          name: dlxui-service
-          port:
-            number: 8089
-  dlc:
-    annotations: {}
-    host: dlc
-    paths:
-      - path: "/dl3-service-.*"
+    hosts:
+    - host: dlx
+      paths:
+      - path: "/v1"
         pathType: Prefix
-        backend:
-          service:
-            name: dlc-service
-            port:
-              number: 8080
-      - path: "/dlm-service"
+        serviceName: apigateway-service
+        port: 9005
+      - path: "/oauth/callback"
         pathType: Prefix
-        backend:
-          service:
-            name: dlc-service
-            port:
-              number: 8080
+        serviceName: dlxui-service
+        port: 8089
+      - path: "/oauth"
+        pathType: Prefix
+        serviceName: apigateway-service
+        port: 9005
+      - path: "/.*-service"
+        pathType: Prefix
+        serviceName: apigateway-service
+        port: 9005
       - path: "/"
         pathType: Prefix
-        backend:
-          service:
-            name: dlcui-service
-            port:
-              number: 8080
-
+        serviceName: dlxui-service
+        port: 8089
+  dlc:
+    annotations: {}
+    hosts:
+    - host: dlc
+      paths:
+      - path: "/dl3-service-.*"
+        pathType: Prefix
+        serviceName: dlc-service
+        port: 8080
+      - path: "/dlm-service"
+        pathType: Prefix
+        serviceName: dlc-service
+        port: 8080
+      - path: "/"
+        pathType: Prefix
+        serviceName: dlcui-service
+        port: 8080
 
 service:
   image:

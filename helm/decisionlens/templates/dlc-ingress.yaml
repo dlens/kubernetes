@@ -13,8 +13,18 @@ metadata:
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
-  - host: {{ .Values.ingress.dlc.host }}
+  {{- range .Values.ingress.dlc.hosts }}
+  - host: {{ .host | quote }}
     http:
       paths:
-      {{- .Values.ingress.dlc.paths | toYaml | nindent 6 }}
+      {{- range .paths }}
+      - path: {{ .path | quote }}
+        pathType: {{ .pathType }}
+        backend:
+          service:
+            name: {{ .serviceName }}
+            port:
+              number: {{ .port }}
+      {{- end -}}
+  {{- end }}
 
