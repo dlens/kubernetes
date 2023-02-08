@@ -13,11 +13,11 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
   {{- range .Values.ingress.dlx.hosts }}
-  - host: {{ .host }}
+  - host: {{ .host | quote }}
     http:
       paths:
       {{- range .paths }}
-      - path: {{ .path }}
+      - path: {{ .path | quote }}
         pathType: {{ .pathType }}
         backend:
           service:
