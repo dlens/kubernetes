@@ -10,6 +10,7 @@ ingress:
   ingressClassName: nginx
   dlx:
     annotations: {}
+    tls: []
     hosts:
     - host: dlx
       paths:
@@ -35,6 +36,7 @@ ingress:
         port: 8089
   dlc:
     annotations: {}
+    tls: []
     hosts:
     - host: dlc
       paths:

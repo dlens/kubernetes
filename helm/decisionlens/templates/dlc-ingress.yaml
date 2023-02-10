@@ -12,6 +12,16 @@ metadata:
     {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
+  {{- if .Values.ingress.dlc.tls }}
+  tls:
+  {{- range .Values.ingress.dlc.tls }}
+  - hosts:
+    {{- range .hosts }}
+    - {{ .host }}
+    {{- end }}
+    secretName: {{ .secretName }}
+  {{- end }}
+  {{- end }}
   rules:
   {{- range .Values.ingress.dlc.hosts }}
   - host: {{ .host | quote }}
