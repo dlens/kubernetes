@@ -146,8 +146,8 @@ spec:
       serviceAccountName: messaging-service
       {{- end }}
       imagePullSecrets:
-      {{- with .Values.global.imagePullSecrets }}
-      {{- toYaml . | nindent 6 }}
+      {{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
       {{- end }}
 
 
