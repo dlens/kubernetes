@@ -105,6 +105,7 @@ service:
     labels: {}
     selectorLabels: {}
     podAnnotations: {}
+    extraEnv: []
   dlxui:
     tag: decisionlens_downloads:dlx-ui_5.8.2
     port: 8089
@@ -120,6 +121,7 @@ service:
     labels: {}
     selectorLabels: {}
     annotations: {}
+    extraEnv: []
   dlcui:
     tag: decisionlens_downloads:dlc-ui_1.21.49
     port: 8088
