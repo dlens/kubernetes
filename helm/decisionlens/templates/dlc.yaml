@@ -168,18 +168,21 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: access-token-header
-        {{ if .Values.jwt.publicKey }}
+        {{- if .Values.jwt.publicKey -}}
         - name: jwt.privateKey
           value: /jwt-keys/private_key.pk8
         - name: jwt.publicKey
           value: /jwt-keys/public_key.pub
-        {{ end }}
+        {{- end }}
+        {{- if .Values.service.dlc.extraEnv -}}
+        {{ toYaml .Values.service.dlc.extraEnv | nindent 8 }}
+        {{- end }}
       {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: dlc-service
       {{- end }}
       imagePullSecrets:
-      {{- with .Values.global.imagePullSecrets }}
-      {{- toYaml . | nindent 6 }}
+      {{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
       {{- end }}
 
 
