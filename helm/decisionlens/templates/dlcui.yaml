@@ -69,6 +69,9 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: dlx-api-url
+        {{- if .Values.service.dlcui.extraEnv -}}
+        {{ toYaml .Values.service.dlcui.extraEnv | nindent 8 }}
+        {{- end }}
       {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: dlcui-service
       {{- end }}
