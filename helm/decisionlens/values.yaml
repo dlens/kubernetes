@@ -6,6 +6,11 @@ global:
   serviceAccount:
     create: false
 
+# Enable or disable decision lens analytic services
+analytics:
+  pendo: true
+  google: true
+
 ingress:
   ingressClassName: nginx
   dlx:
@@ -88,6 +93,8 @@ service:
     labels: {}
     selectorLabels: {}
     podAnnotations: {}
+    extraVolumes:[]
+    extraVolumeMounts[]
   apigateway:
     tag: decisionlens_downloads:apigateway-service_5.2.1
     version: master
@@ -122,6 +129,8 @@ service:
     selectorLabels: {}
     annotations: {}
     extraEnv: []
+    extraVolumes:[]
+    extraVolumeMounts[]
   dlcui:
     tag: decisionlens_downloads:dlc-ui_1.21.55
     port: 8088

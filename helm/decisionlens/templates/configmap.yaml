@@ -34,6 +34,10 @@ data:
           "clientId": {{ .Values.dlx.ui.clientId | quote }},
           "authServiceUrl": {{ .Values.dlx.api.url | quote }},
           "accessTokenHeader": {{ .Values.access.token.header | quote }}    
+       },
+       "analytics": { 
+         "pendoEnabled": {{ .Values.analytics.pendo }},
+         "googleAnalyticsEnabled": {{ .Values.analytics.google }}
        }
     }
 
