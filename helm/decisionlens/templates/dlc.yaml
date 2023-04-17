@@ -40,12 +40,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{ if .Values.jwt.publicKey }}
       volumes:
+      {{- if .Values.jwt.publicKey }}
       - name: jwt-keys-volume
         secret:
           secretName: jwt-keys-secret
-      {{ end }}
+      {{- end }}
+      {{- if .Values.service.dlc.extraVolumes -}}
+      {{ toYaml .Values.service.dlc.extraVolumes | nindent 6 }}
+      {{- end }}
       containers:
       - name: dlc
         image: {{ .Values.service.image.url }}/{{ .Values.service.dlc.tag }}
@@ -59,12 +62,15 @@ spec:
         ports:
         - containerPort: {{ .Values.service.dlc.port }}
         imagePullPolicy: Always
-        {{ if .Values.jwt.publicKey }}
         volumeMounts:
+        {{- if .Values.jwt.publicKey }}
         - name: jwt-keys-volume
           readOnly: true
           mountPath: /jwt-keys
-        {{ end }}
+        {{- end }}
+        {{- if .Values.service.dlc.extraVolumeMounts -}}
+        {{ toYaml .Values.service.dlc.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         env:
         - name: database.jdbcUrl
           value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.dlc }}?{{ include "decisionlens.dlc.jdbc.options" . }}
