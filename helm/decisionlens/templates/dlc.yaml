@@ -104,6 +104,30 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: apigateway-service-url
+        - name: database.jdbcUrl
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/dl3?{{ include "decisionlens.jdbc.options" . }}
+        - name: database.username
+          valueFrom:
+            secretKeyRef:
+              name: { { .Release.Name } }-secret
+              key: database-username
+        - name: database.password
+          valueFrom:
+            secretKeyRef:
+              name: { { .Release.Name } }-secret
+              key: database-password
+        - name: database.dlconf.jdbcUrl
+          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/dlconf?{{ include "decisionlens.jdbc.options" . }}
+        - name: database.dlconf.username
+          valueFrom:
+            secretKeyRef:
+              name: { { .Release.Name } }-secret
+              key: database-username
+        - name: database.dlconf.password
+          valueFrom:
+            secretKeyRef:
+              name: { { .Release.Name } }-secret
+              key: database-password
         - name: cacheServers
           valueFrom:
             configMapKeyRef:
@@ -119,52 +143,52 @@ spec:
             secretKeyRef:
               name: {{ .Release.Name }}-secret
               key: jwt-secret
-        - name: RABBITMQ_HOST
+        - name: spring.rabbitmq.host
           valueFrom:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: rabbitmq-host
-        - name: RABBITMQ_PORT
+        - name: spring.rabbitmq.port
           valueFrom:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: rabbitmq-port
-        - name: RABBITMQ_USERNAME
+        - name: spring.rabbitmq.username
           valueFrom:
             secretKeyRef:
               name: {{ .Release.Name }}-secret
               key: rabbitmq-username
-        - name: RABBITMQ_PASSWORD
+        - name: spring.rabbitmq.password
           valueFrom:
             secretKeyRef:
               name: {{ .Release.Name }}-secret
               key: rabbitmq-password
-        - name: license.key
+        - name: DL_LICENSE_KEY
           valueFrom:
             secretKeyRef:
               name: {{ .Release.Name }}-secret
               key: dl-license-key
-        - name: mail.host
+        - name: spring.mail.host
           valueFrom:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: mail-host
-        - name: mail.port
+        - name: spring.mail.port
           valueFrom:
               configMapKeyRef:
                 name: {{ .Release.Name }}-configmap
                 key: mail-port
-        - name: mail.username
+        - name: spring.mail.username
           valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-secret
                 key: mail-username
-        - name: mail.password
+        - name: spring.mail.password
           valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-secret
                 key: mail-password
-        - name: mail.auth
+        - name: spring.mail.properties.mail.smtp.auth
           valueFrom:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
