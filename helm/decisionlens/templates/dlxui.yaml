@@ -61,6 +61,9 @@ spec:
         volumeMounts:
         - name: dlxui-config-volume
           mountPath: /wfConfig 
+        {{- if .Values.service.dlxui.extraVolumeMounts -}}
+        {{ toYaml .Values.service.dlui.extraVolumeMounts | nindent 8 }}
+        {{- end }}
       volumes:
       - name: dlxui-config-volume
         configMap: 
@@ -68,11 +71,14 @@ spec:
           items: 
           - key: config.json
             path: config.json
+      {{- if .Values.service.dlxui.extraVolumes -}}
+      {{ toYaml .Values.service.dlxui.extraVolumes | nindent 6 }}
+      {{- end }}
       {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: dlxui-service
       {{- end }}
       imagePullSecrets:
-      {{- with .Values.global.imagePullSecrets }}
-      {{- toYaml . | nindent 6 }}
+      {{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
       {{- end }}
 

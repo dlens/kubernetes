@@ -40,6 +40,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      volumes:
+      {{- if .Values.service.apigateway.extraVolumes -}}
+      {{ toYaml .Values.service.apigateway.extraVolumes | nindent 6 }}
+      {{- end }}
       containers:
       - name: apigateway
         image: {{ .Values.service.image.url }}/{{ .Values.service.apigateway.tag }}
@@ -52,6 +56,10 @@ spec:
             cpu: "2000m"
         ports:
         - containerPort: {{ .Values.service.apigateway.port }}           
+        volumeMounts:
+        {{- if .Values.service.apigateway.extraVolumeMounts -}}
+        {{ toYaml .Values.service.apigateway.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         env: 
         - name: service.url.integration
           valueFrom:
@@ -88,11 +96,14 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: dlc-service-url  
+        {{- if .Values.service.apigateway.extraEnv -}}
+        {{ toYaml .Values.service.apigateway.extraEnv | nindent 8 }}
+        {{- end }}
       {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: apigateway-service
       {{- end }}
       imagePullSecrets:
-      {{- with .Values.global.imagePullSecrets }}
-      {{- toYaml . | nindent 6 }}
+      {{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
       {{- end }}
 

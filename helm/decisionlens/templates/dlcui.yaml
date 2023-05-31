@@ -40,6 +40,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:      
+      volumes:
+      {{- if .Values.service.dlcui.extraVolumes -}}
+      {{ toYaml .Values.service.dlcui.extraVolumes | nindent 6 }}
+      {{- end }}
       containers:
       - name: dlcui
         image: {{ .Values.service.image.url }}/{{ .Values.service.dlcui.tag }}
@@ -53,6 +57,10 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: {{ .Values.service.dlcui.port }}
+        volumeMounts:
+        {{- if .Values.service.dlcui.extraVolumeMounts -}}
+        {{ toYaml .Values.service.dlcui.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         env:
         - name: CLIENT_ID
           valueFrom:
@@ -69,12 +77,15 @@ spec:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
               key: dlx-api-url
+        {{- if .Values.service.dlcui.extraEnv -}}
+        {{ toYaml .Values.service.dlcui.extraEnv | nindent 8 }}
+        {{- end }}
       {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: dlcui-service
       {{- end }}
       imagePullSecrets:
-      {{- with .Values.global.imagePullSecrets }}
-      {{- toYaml . | nindent 6 }}
+      {{- range .Values.global.imagePullSecrets }}
+      - name: {{ . }}
       {{- end }}
 
 
