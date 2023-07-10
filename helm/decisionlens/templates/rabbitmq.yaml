@@ -37,12 +37,24 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      volumes:
+      {{- if .Values.rabbitmq.extraVolumes -}}
+      {{ toYaml .Values.rabbitmq.extraVolumes | nindent 6 }}
+      {{- end }}
       containers:
       - name: rabbitmq
         image: {{ .Values.rabbitmq.image }}
         ports:       
         - containerPort: {{ .Values.rabbitmq.port }}
         - containerPort: {{ .Values.rabbitmq.stompPort }}
+        volumeMounts:
+        {{- if .Values.rabbitmq.extraVolumeMounts -}}
+        {{ toYaml .Values.rabbitmq.extraVolumeMounts | nindent 8 }}
+        {{- end }}
+        env:
+        {{- if .Values.rabbitmq.extraEnv -}}
+        {{ toYaml .Values.rabbitmq.extraEnv | nindent 8 }}
+        {{- end }}
       {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: rabbitmq-service
       {{- end }}

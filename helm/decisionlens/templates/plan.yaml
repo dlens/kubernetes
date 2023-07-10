@@ -40,12 +40,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{ if .Values.jwt.publicKey }}
       volumes:
+      {{ if .Values.jwt.publicKey }}
       - name: jwt-keys-volume
         secret:
           secretName: jwt-keys-secret
       {{ end }}
+      {{- if .Values.service.plan.extraVolumes -}}
+      {{ toYaml .Values.service.plan.extraVolumes | nindent 6 }}
+      {{- end }}
       containers:
       - name: plan
         image: {{ .Values.service.image.url }}/{{ .Values.service.plan.tag }}
@@ -59,12 +62,15 @@ spec:
         ports:
         - containerPort: {{ .Values.service.plan.port }}    
         imagePullPolicy: Always
-        {{ if .Values.jwt.publicKey }}
         volumeMounts:
+        {{ if .Values.jwt.publicKey }}
         - name: jwt-keys-volume
           readOnly: true
           mountPath: /jwt-keys
         {{ end }}
+        {{- if .Values.service.plan.extraVolumeMounts -}}
+        {{ toYaml .Values.service.plan.extraVolumeMounts | nindent 8 }}
+        {{- end }}
         env:        
         - name: service.url.apigateway
           valueFrom:
@@ -166,6 +172,9 @@ spec:
         - name: jwt.publicKey
           value: /jwt-keys/public_key.pub
         {{ end }}
+        {{- if .Values.service.plan.extraEnv -}}
+        {{ toYaml .Values.service.plan.extraEnv | nindent 8 }}
+        {{- end }}
       {{- if .Values.global.serviceAccount.create }}
       serviceAccountName: plan-service
       {{- end }}

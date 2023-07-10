@@ -40,11 +40,14 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.jwt.publicKey }}
       volumes:
+      {{- if .Values.jwt.publicKey }}
       - name: jwt-keys-volume
         secret:
           secretName: jwt-keys-secret
+      {{- end }}
+      {{- if .Values.service.auth.extraVolumes -}}
+      {{ toYaml .Values.service.auth.extraVolumes | nindent 6 }}
       {{- end }}
       containers:
       - name: auth
@@ -59,11 +62,14 @@ spec:
         ports:
         - containerPort: {{ .Values.service.auth.port }}    
         imagePullPolicy: Always
-        {{- if .Values.jwt.publicKey }}
         volumeMounts:
+        {{- if .Values.jwt.publicKey }}
         - name: jwt-keys-volume
           readOnly: true
           mountPath: /jwt-keys
+        {{- end }}
+        {{- if .Values.service.auth.extraVolumeMounts -}}
+        {{ toYaml .Values.service.auth.extraVolumeMounts | nindent 8 }}
         {{- end }}
         env:        
         - name: service.url.apigateway
