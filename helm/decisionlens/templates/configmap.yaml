@@ -12,6 +12,7 @@ data:
   elastic-service-url: {{ .Values.elastic.server.url }}
   rabbitmq-host: {{ .Values.rabbitmq.host }}
   rabbitmq-port: {{ .Values.rabbitmq.port | quote }}
+  rabbitmq-stompPort: {{ .Values.rabbitmq.stompPort | quote }}
   mail-host: {{ .Values.mail.host }}
   mail-port: {{ .Values.mail.port | quote }}
   mail-auth: {{ .Values.mail.auth | quote }}

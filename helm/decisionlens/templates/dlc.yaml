@@ -152,7 +152,7 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
-              key: rabbitmq-port
+              key: rabbitmq-stompPort
         - name: spring.rabbitmq.username
           valueFrom:
             secretKeyRef:
