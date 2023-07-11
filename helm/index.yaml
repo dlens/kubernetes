@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  decisionlens_downloads:
+  - apiVersion: v2
+    appVersion: 1.30.2
+    created: "2023-07-11T08:31:37.296236-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 254d51ffaf50b5c271708180cdfad0adb54d6d4cda24845a99ecba3d9a281386
+    name: decisionlens_downloads
+    type: application
+    urls:
+    - decisionlens_downloads-1.30.2.tgz
+    version: 1.30.2
+generated: "2023-07-11T08:31:37.290239-04:00"
