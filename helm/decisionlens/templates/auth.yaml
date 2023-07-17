@@ -54,11 +54,11 @@ spec:
         image: {{ .Values.service.image.url }}/{{ .Values.service.auth.tag }}
         resources:
           requests:
-            memory: "1000Mi"
-            cpu: "1000m"
+            memory: {{ .Values.service.auth.resources.requests.memory }}
+            cpu: {{ .Values.service.auth.resources.requests.cpu }}
           limits:
-            memory: "4000Mi"
-            cpu: "2000m"
+            memory: {{ .Values.service.auth.resources.limits.memory }}
+            cpu: {{ .Values.service.auth.resources.limits.cpu }}
         ports:
         - containerPort: {{ .Values.service.auth.port }}    
         imagePullPolicy: Always
