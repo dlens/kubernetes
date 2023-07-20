@@ -48,12 +48,12 @@ spec:
       - name: apigateway
         image: {{ .Values.service.image.url }}/{{ .Values.service.apigateway.tag }}
         resources:
-          requests:
-            memory: "1000Mi"
-            cpu: "1000m"
+          requests: 
+            memory: {{ .Values.service.apigateway.resources.requests.memory }}
+            cpu: {{ .Values.service.apigateway.resources.requests.cpu }}
           limits:
-            memory: "4000Mi"
-            cpu: "2000m"
+            memory: {{ .Values.service.apigateway.resources.limits.memory }}
+            cpu: {{ .Values.service.apigateway.resources.limits.cpu }}
         ports:
         - containerPort: {{ .Values.service.apigateway.port }}           
         volumeMounts:

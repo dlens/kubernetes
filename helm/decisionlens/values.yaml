@@ -72,6 +72,13 @@ service:
     extraEnv: []
     extraVolumes: []
     extraVolumeMounts: []
+    resources:
+      requests:
+        memory: "1000Mi"
+        cpu: "1000m"
+      limits:
+        memory: "4000Mi"
+        cpu: "2000m"
   portfolio:
     tag: decisionlens_downloads:portfolio-service_8.2.0
     port: 9001
@@ -83,6 +90,13 @@ service:
     extraEnv: []
     extraVolumes: []
     extraVolumeMounts: []
+    resources:
+      limits:
+        memory:  "1500Mi"
+        cpu: "1000m"
+      requests:
+        memory: "1000Mi"
+        cpu: "1000m"
   plan:
     tag: decisionlens_downloads:plan-service_4.6.3
     port: 9003
@@ -91,6 +105,13 @@ service:
     labels: {}
     selectorLabels: {}
     podAnnotations: {}
+    resources:
+      limits:
+        memory:  "8000Mi"
+        cpu: "4000m"
+      requests:
+        memory: "2000Mi"
+        cpu: "2000m"
     extraEnv: []
     extraVolumes: []
     extraVolumeMounts: []
@@ -102,6 +123,13 @@ service:
     labels: {}
     selectorLabels: {}
     podAnnotations: {}
+    resources:
+      limits:
+        memory:  "4000Mi"
+        cpu: "2000m"
+      requests:
+        memory: "1000Mi"
+        cpu: "1000m"
     extraEnv: []
     extraVolumes: []
     extraVolumeMounts: []
@@ -114,6 +142,13 @@ service:
     labels: {}
     selectorLabels: {}
     podAnnotations: {}
+    resources:
+      limits:
+        memory: "500Mi"
+        cpu: "1000m"
+      requests:
+        memory: "250Mi"
+        cpu: "100m"
     extraEnv: []
     extraVolumes: []
     extraVolumeMounts: []
@@ -126,9 +161,15 @@ service:
     selectorLabels: {}
     podAnnotations: {}
     extraEnv: []
+    resources:
+      limits:
+        memory: "2000Mi"
+        cpu: "1000m"
+      requests:
+        memory: "1200Mi"
+        cpu: "100m"
     extraVolumes: []
     extraVolumeMounts: []
-
   dlxui:
     tag: decisionlens_downloads:dlx-ui_9.1.0
     port: 8089
@@ -136,6 +177,13 @@ service:
     labels: {}
     selectorLabels: {}
     podAnnotations: {}
+    resources:
+      limits:
+        memory: "4000Mi"
+        cpu: "2000m"
+      requests:
+        memory: "1000Mi"
+        cpu: "1000m"
     extraEnv: []
     extraVolumes: []
     extraVolumeMounts: []
@@ -148,6 +196,13 @@ service:
     selectorLabels: {}
     annotations: {}
     extraEnv: []
+    resources:
+      limits:
+        memory: "8000Mi"
+        cpu: "4000m"
+      requests:
+        memory: "2000Mi"
+        cpu: "2000m"
     extraVolumes: []
     extraVolumeMounts: []
   dlcui:
@@ -158,11 +213,25 @@ service:
     selectorLabels: {}
     podAnnotations: {}
     extraEnv: []
+    resources:
+      limits:
+        memory:  "4000Mi"
+        cpu: "2000m"
+      requests:
+        memory: "1000Mi"
+        cpu: "1000m"
     extraVolumes: []
     extraVolumeMounts: []
 
 rabbitmq:
   image: 723504183657.dkr.ecr.us-east-1.amazonaws.com/decisionlens_downloads:rabbitmq_3.12.1
+  resources:
+    limits:
+      memory: "250Mi"
+      cpu: "100m"
+    requests:
+      memory: "125Mi"
+      cpu:  "50m"
   host: rabbitmq-service
   port: 5672
   stompPort: 61613

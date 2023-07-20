@@ -54,11 +54,11 @@ spec:
         image: {{ .Values.service.image.url }}/{{ .Values.service.messaging.tag }}
         resources:
           requests:
-            memory: "1000Mi"
-            cpu: "1000m"
+            memory: {{ .Values.service.plan.resources.requests.memory }}
+            cpu: {{ .Values.service.plan.resources.requests.cpu }}
           limits:
-            memory: "4000Mi"
-            cpu: "2000m"
+            memory: {{ .Values.service.messaging.resources.limits.memory }}
+            cpu: {{ .Values.service.messaging.resources.limits.cpu }}
         ports:
         - containerPort: {{ .Values.service.messaging.port }}    
         imagePullPolicy: Always

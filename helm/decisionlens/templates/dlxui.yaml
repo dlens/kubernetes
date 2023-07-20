@@ -44,12 +44,12 @@ spec:
       - name: dlxui
         image: {{ .Values.service.image.url }}/{{ .Values.service.dlxui.tag }}
         resources:
-          requests:
-            memory: "1000Mi"
-            cpu: "1000m"
+          requests: 
+            memory: {{ .Values.service.dlxui.resources.requests.memory }}
+            cpu: {{ .Values.service.dlxui.resources.requests.cpu }}
           limits:
-            memory: "4000Mi"
-            cpu: "2000m"
+            memory: {{ .Values.service.dlxui.resources.limits.memory }}
+            cpu: {{ .Values.service.dlxui.resources.limits.cpu }}
         ports:
         - containerPort: {{ .Values.service.dlxui.port }}
         env:

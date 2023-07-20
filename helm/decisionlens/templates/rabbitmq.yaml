@@ -44,6 +44,13 @@ spec:
       containers:
       - name: rabbitmq
         image: {{ .Values.rabbitmq.image }}
+        resources:
+          requests:
+            memory: {{ .Values.rabbitmq.resources.requests.memory }}
+            cpu: {{ .Values.rabbitmq.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.rabbitmq.resources.limits.memory }}
+            cpu: {{ .Values.rabbitmq.resources.limits.cpu }}
         ports:       
         - containerPort: {{ .Values.rabbitmq.port }}
         - containerPort: {{ .Values.rabbitmq.stompPort }}
