@@ -103,30 +103,28 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: {{ .Release.Name }}-configmap
-              key: apigateway-service-url
-        - name: database.jdbcUrl
-          value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/dl3?{{ include "decisionlens.jdbc.options" . }}
+              key: apigateway-service-url       
         - name: database.username
           valueFrom:
             secretKeyRef:
-              name: { { .Release.Name } }-secret
+              name: {{ .Release.Name }}-secret
               key: database-username
         - name: database.password
           valueFrom:
             secretKeyRef:
-              name: { { .Release.Name } }-secret
+              name: {{ .Release.Name }}-secret
               key: database-password
         - name: database.dlconf.jdbcUrl
           value: jdbc:mysql://{{ .Values.database.host }}:{{ .Values.database.port }}/dlconf?{{ include "decisionlens.jdbc.options" . }}
         - name: database.dlconf.username
           valueFrom:
             secretKeyRef:
-              name: { { .Release.Name } }-secret
+              name: {{ .Release.Name }}-secret
               key: database-username
         - name: database.dlconf.password
           valueFrom:
             secretKeyRef:
-              name: { { .Release.Name } }-secret
+              name: {{ .Release.Name }}-secret
               key: database-password
         - name: cacheServers
           valueFrom:
