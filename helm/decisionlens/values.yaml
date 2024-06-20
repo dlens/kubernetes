@@ -80,7 +80,7 @@ service:
         memory: "4000Mi"
         cpu: "2000m"
   portfolio:
-    tag: decisionlens_downloads:portfolio-service_9.7.0
+    tag: decisionlens_downloads:portfolio-service_9.7.1
     port: 9001
     url: http://portfolio-service:9001
     replicas: 1
@@ -171,7 +171,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   dlxui:
-    tag: decisionlens_downloads:dlx-ui_10.9.0
+    tag: decisionlens_downloads:dlx-ui_10.9.1
     port: 8089
     replicas: 1
     labels: {}
