@@ -62,7 +62,7 @@ service:
   image:
     url: 723504183657.dkr.ecr.us-east-1.amazonaws.com
   integration:
-    tag: decisionlens_downloads:integration-service_5.6.9
+    tag: decisionlens_downloads:integration-service_5.6.10
     port: 9000
     url: http://integration-service:9000
     replicas: 1
@@ -80,7 +80,7 @@ service:
         memory: "4000Mi"
         cpu: "2000m"
   portfolio:
-    tag: decisionlens_downloads:portfolio-service_9.11.2
+    tag: decisionlens_downloads:portfolio-service_9.12.0
     port: 9001
     url: http://portfolio-service:9001
     replicas: 1
@@ -98,7 +98,7 @@ service:
         memory: "1000Mi"
         cpu: "1000m"
   plan:
-    tag: decisionlens_downloads:plan-service_5.6.8
+    tag: decisionlens_downloads:plan-service_5.7.0
     port: 9003
     url: http://plan-service:9003
     replicas: 1
@@ -116,7 +116,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   messaging:
-    tag: decisionlens_downloads:messaging-service_3.21.5
+    tag: decisionlens_downloads:messaging-service_3.21.6
     port: 9004
     url: http://messaging-service:9004
     replicas: 1
@@ -134,7 +134,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   apigateway:
-    tag: decisionlens_downloads:apigateway-service_7.4.0
+    tag: decisionlens_downloads:apigateway-service_7.5.0
     version: master
     port: 9005
     url: http://apigateway-service:9005
@@ -153,7 +153,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   auth:
-    tag: decisionlens_downloads:auth-service_6.6.2
+    tag: decisionlens_downloads:auth-service_6.7.0
     port: 9006
     url: http://auth-service:9006
     replicas: 1
@@ -171,7 +171,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   dlxui:
-    tag: decisionlens_downloads:dlx-ui_11.7.0
+    tag: decisionlens_downloads:dlx-ui_11.8.0
     port: 8089
     replicas: 1
     labels: {}
@@ -188,7 +188,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   dlc:
-    tag: decisionlens_downloads:dlc-service_1.25.0
+    tag: decisionlens_downloads:dlc-service_1.25.1
     port: 8080
     url: http://dlc-service:8080
     replicas: 1
@@ -206,7 +206,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   dlcui:
-    tag: decisionlens_downloads:dlc-ui_1.25.0
+    tag: decisionlens_downloads:dlc-ui_1.25.1
     port: 8088
     replicas: 1
     labels: {}
@@ -224,7 +224,7 @@ service:
     extraVolumeMounts: []
 
 rabbitmq:
-  image: 723504183657.dkr.ecr.us-east-1.amazonaws.com/decisionlens_downloads:rabbitmq_4.0.5
+  image: 723504183657.dkr.ecr.us-east-1.amazonaws.com/decisionlens_downloads:rabbitmq_4.0.7
   resources:
     limits:
       memory: "250Mi"
