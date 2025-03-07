@@ -206,7 +206,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   dlcui:
-    tag: decisionlens_downloads:dlc-ui_1.25.1
+    tag: decisionlens_downloads:dlc-ui_1.25.2
     port: 8088
     replicas: 1
     labels: {}
