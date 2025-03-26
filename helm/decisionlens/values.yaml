@@ -12,6 +12,7 @@ analytics:
   google: true
 
 ingress:
+  enabled: true
   ingressClassName: nginx
   dlx:
     annotations: {}
