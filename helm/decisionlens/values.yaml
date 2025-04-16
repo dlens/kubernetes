@@ -63,7 +63,7 @@ service:
   image:
     url: 723504183657.dkr.ecr.us-east-1.amazonaws.com
   integration:
-    tag: decisionlens_downloads:integration-service_5.7.0
+    tag: decisionlens_downloads:integration-service_5.7.1
     port: 9000
     url: http://integration-service:9000
     replicas: 1
@@ -81,7 +81,7 @@ service:
         memory: "4000Mi"
         cpu: "2000m"
   portfolio:
-    tag: decisionlens_downloads:portfolio-service_9.13.0
+    tag: decisionlens_downloads:portfolio-service_9.13.1
     port: 9001
     url: http://portfolio-service:9001
     replicas: 1
