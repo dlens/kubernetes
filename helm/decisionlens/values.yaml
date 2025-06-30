@@ -189,7 +189,7 @@ service:
     extraVolumes: []
     extraVolumeMounts: []
   dlc:
-    tag: decisionlens_downloads:dlc-service_1.25.4
+    tag: decisionlens_downloads:dlc-service_1.25.5
     port: 8080
     url: http://dlc-service:8080
     replicas: 1
