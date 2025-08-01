@@ -81,7 +81,7 @@ service:
         memory: "4000Mi"
         cpu: "2000m"
   portfolio:
-    tag: decisionlens_downloads:portfolio-service_10.4.0
+    tag: decisionlens_downloads:portfolio-service_10.4.1
     port: 9001
     url: http://portfolio-service:9001
     replicas: 1
